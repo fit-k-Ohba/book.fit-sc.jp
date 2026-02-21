@@ -5,6 +5,7 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 $cfg = require __DIR__ . '/../../apps/config.php';
 
 require_once __DIR__ . '/../../apps/build_mail.php';
+require_once __DIR__ . '/../../apps/reply_mail_build.php';
 require_once __DIR__ . '/../../apps/smtp_mailer.php';
 
 try {
@@ -15,6 +16,9 @@ try {
 
     $mailData = build_mail_from_request($cfg);
     send_mail_smtp($cfg, $mailData);
+
+    $replyData = build_mail_reply($mailData);
+    send_mail_smtp($cfg, $replyData);
 
     header('Location: /success.html', true, 303);
     exit;
