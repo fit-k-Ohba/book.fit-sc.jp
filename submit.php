@@ -2,10 +2,10 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../../vendor/autoload.php';
-$cfg = require __DIR__ . '/../../app/config.php';
+$cfg = require __DIR__ . '/../../apps/config.php';
 
-require_once __DIR__ . '/../../app/build_mail.php';
-require_once __DIR__ . '/../../app/smtp_mailer.php';
+require_once __DIR__ . '/../../apps/build_mail.php';
+require_once __DIR__ . '/../../apps/smtp_mailer.php';
 
 try {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -19,5 +19,11 @@ try {
     header('Location: /success.html', true, 303);
     exit;
 } catch (Throwable $e) {
+    $id = bin2hex(random_bytes(6));
+    error_log("[upload:$id] " . $e->getMessage());
+    error_log("[upload:$id] " . $e->getFile() . ":" . $e->getLine());
+    error_log("[upload:$id] FILES=" . json_encode($_FILES, JSON_UNESCAPED_UNICODE));
+    error_log("[upload:$id] POST keys=" . implode(',', array_keys($_POST)));
+
     header('Location: /mistake.html', true, 303);
 }
